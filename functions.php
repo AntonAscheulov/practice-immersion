@@ -37,3 +37,20 @@ function display_flash_message($name){
         unset($_SESSION[$name]);
     }
 }
+
+
+
+function authorize($email, $password){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = 'SELECT * FROM users WHERE email=:email';
+    $statement=$pdo->prepare($sql);
+    $statement->execute(['email' => $email]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+if (empty($user) or !password_verify($password,$user['password'])){
+    set_flash_message('danger', 'Неверное имя пользователя или пароль');
+    redirect_to('page_login.php');
+}else
+    $_SESSION['user'] = ['email' =>$user['email'], 'id' =>$user['id']];
+    redirect_to('page_profile.php');
+}
