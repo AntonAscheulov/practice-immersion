@@ -71,6 +71,16 @@ require __DIR__.'/functions.php'; //подключаем файл с функц�
                                             <div class="help-block">Эл. адрес будет вашим логином при авторизации</div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="form-label">Имя</label>
+                                            <input type="text" id="name" name="name" class="form-control" placeholder="Имя" required>
+                                            <div class="invalid-feedback">Заполните поле.</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Фамилия</label>
+                                            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Фамилия" required>
+                                            <div class="invalid-feedback">Заполните поле.</div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-label" for="userpassword">Пароль <br></label>
                                             <input type="password" id="userpassword" name="password" class="form-control" placeholder="" required>
                                             <div class="invalid-feedback">Заполните поле.</div>
