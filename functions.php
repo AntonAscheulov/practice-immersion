@@ -175,3 +175,19 @@ function add_social_links($vk, $telegram, $instagram, $user_id){
       'instagram' => $instagram,
     ]);
 }
+
+function is_not_author(){
+    if ($_SESSION['user']['id'] !== $_GET['id']){
+        return true;
+    }return false;
+}
+
+function get_user_by_id($id){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = 'SELECT * FROM users WHERE id =:id';
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['id' => $id]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return $user;
+}
