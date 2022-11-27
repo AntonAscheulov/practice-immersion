@@ -18,15 +18,13 @@ function redirect_to($path){
     exit();
 }
 
-function add_user($email, $name, $last_name, $password){
+function add_user($email, $password){
     $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
-    $sql = 'INSERT INTO users (email, password, name, last_name) VALUES (:email, :password, :name, :last_name)';
+    $sql = 'INSERT INTO users (email, password) VALUES (:email, :password)';
 
     $statement = $pdo->prepare($sql);
     $statement->execute([
       'email'    => $email,
-      'name' => $name,
-      'last_name' => $last_name,
       'password' => password_hash($password, PASSWORD_DEFAULT),
     ]);
 
@@ -95,11 +93,85 @@ function is_equal($user, $current_user){
 }
 
 function get_status($user){
-    if ($user['status'] === 'online'){
+    if ($user['status'] === 'Онлайн'){
         return 'success';
-    }elseif ($user['status'] === 'offline'){
+    }elseif ($user['status'] === 'Оффлайн'){
         return 'danger';
-    }elseif ($user['status'] === 'not_in_place'){
+    }elseif ($user['status'] === 'Нет на месте'){
         return 'warning';
     }
+}
+
+function edit_information($name, $last_name, $job_title, $phone, $address, $user_id){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = "UPDATE users SET name = :name, last_name = :last_name, job_title = :job_title, phone = :phone, address = :address WHERE id = :id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([
+      'id' => $user_id,
+      'name'    => $name,
+      'last_name' => $last_name,
+      'job_title' => $job_title,
+      'phone' => $phone,
+      'address'=> $address,
+    ]);
+}
+
+function set_status($status, $user_id){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = "UPDATE users SET status = :status WHERE id = :id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([
+      'id' => $user_id,
+      'status' => $status,
+    ]);
+}
+
+function upload_avatar($avatar, $user_id){
+    // проверяем нет ли ававтарки у пользователя и если есть удаляем
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = "SELECT * FROM users WHERE id=:id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['id' => $user_id]);
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (file_exists($result['avatar'])){
+        unlink($result['avatar']);
+    }
+// загружаем аватарку
+    $name = $avatar['name'];
+    $tmp_name = $avatar['tmp_name'];
+    //получаем расширение файла
+    $extension = pathinfo($name);
+    //делаем уникальное имя
+    $uniqeName = uniqid($name);
+    //имя директории для загрузки
+    $save_directory = 'uploads/avatars/';
+    //формируем путь до файла для загрузки в БД
+    $image_path = $save_directory.$uniqeName.'.'.$extension['extension'];
+    //загружаем файл в папку
+    move_uploaded_file($tmp_name,$image_path);
+
+    $sql = "UPDATE users SET avatar = :avatar WHERE id = $user_id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([
+      'avatar' => $image_path,
+    ]);
+}
+
+function get_avatar($user){
+    if ($user['avatar'] === null or !file_exists($user['avatar'])){
+        return 'uploads/avatars/avatar.png';
+    }return $user['avatar'];
+}
+
+function add_social_links($vk, $telegram, $instagram, $user_id){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = "UPDATE users SET VK = :VK, telegram = :telegram, instagram =:instagram WHERE id = :id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([
+      'id' => $user_id,
+      'VK' => $vk,
+      'telegram' => $telegram,
+      'instagram' => $instagram,
+    ]);
 }

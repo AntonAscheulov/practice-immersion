@@ -43,9 +43,10 @@ $users = get_users();
         </nav>
 
         <main id="js-page-content" role="main" class="page-content mt-3">
-            <div class="alert alert-success">
-                Профиль успешно обновлен.
-            </div>
+<!--            <div class="alert alert-success">-->
+<!--                Профиль успешно обновлен.-->
+<!--            </div>-->
+            <?php display_flash_message('success');?>
             <div class="subheader">
                 <h1 class="subheader-title">
                     <i class='subheader-icon fal fa-users'></i> Список пользователей
@@ -54,7 +55,7 @@ $users = get_users();
             <div class="row">
                 <div class="col-xl-12">
                     <?php if (is_admin(get_athorizated_user())):?>
-                    <a class="btn btn-success" href="create_user.html">Добавить</a>
+                    <a class="btn btn-success" href="create_user.php">Добавить</a>
                     <?php endif;?>
                     <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
                         <input type="text" id="js-filter-contacts" name="filter-contacts" class="form-control shadow-inset-2 form-control-lg" placeholder="Найти пользователя">
@@ -76,7 +77,7 @@ $users = get_users();
                         <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                             <div class="d-flex flex-row align-items-center">
                                 <span class="status status-<?php echo get_status($user)?> mr-3">
-                                    <span class="rounded-circle profile-image d-block " style="background-image:url(<?php echo $user['avatar'];?>); background-size: cover;"></span>
+                                    <span class="rounded-circle profile-image d-block " style="background-image:url(<?php echo get_avatar($user)?>); background-size: cover;"></span>
                                 </span>
                                 <div class="info-card-text flex-1">
                                     <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
