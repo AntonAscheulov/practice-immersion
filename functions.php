@@ -191,3 +191,36 @@ function get_user_by_id($id){
 
     return $user;
 }
+
+function is_valid_email($email, $current_email){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = 'SELECT email FROM users WHERE email =:email';
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['email' => $email]);
+    $user_email = $statement->fetch(PDO::FETCH_ASSOC);
+
+
+    if ($current_email == $email or empty($user_email)){
+        return true;
+    }else return false;
+}
+
+function edit_credentials($user_id, $email, $password){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    if (empty($password)){
+        $sql = "UPDATE users SET email = :email WHERE id = :id";
+        $statement = $pdo->prepare($sql);
+        $statement->execute([
+          'id' => $user_id,
+          'email' => $email,
+        ]);
+    }else{
+        $sql = "UPDATE users SET email = :email, password = :password WHERE id = :id";
+        $statement = $pdo->prepare($sql);
+        $statement->execute([
+          'id' => $user_id,
+          'email' => $email,
+          'password' => password_hash($password, PASSWORD_DEFAULT),
+        ]);
+    }
+}

@@ -49,6 +49,7 @@ $user = get_user_by_id($_GET['id']);
             </div>
             <div class="row">
               <div class="col-lg-6 col-xl-6 m-auto">
+                  <?php display_flash_message('success');?>
                     <!-- profile summary -->
                     <div class="card mb-g rounded-top">
                         <div class="row no-gutters row-grid">

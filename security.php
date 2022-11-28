@@ -1,3 +1,16 @@
+<?php session_start();
+require __DIR__.'/functions.php'; //подключаем файл с функциями
+
+if (is_not_authorize()){
+    redirect_to('page_login.php');
+}
+
+if (!is_admin(get_athorizated_user()) and is_not_author()){
+    set_flash_message('danger', 'Можно редактировать только свой профиль!');
+    redirect_to('users.php');
+}
+$user = get_user_by_id($_GET['id']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +51,10 @@
             </h1>
 
         </div>
-        <form action="">
+        <?php display_flash_message('danger');?>
+        <form action="security_handler.php" method="post">
+            <input type="hidden" name="user_id" value="<?php echo $user['id']?>">
+            <input type="hidden" name="current_email" value="<?php echo $user['email']?>">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -50,24 +66,24 @@
                                 <!-- email -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Email</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="john@example.com">
+                                    <input type="text" id="simpleinput" name="email" class="form-control" value="<?php echo $user['email']?>">
                                 </div>
 
                                 <!-- password -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Пароль</label>
-                                    <input type="password" id="simpleinput" class="form-control">
+                                    <input type="password" id="simpleinput" name="password" class="form-control">
                                 </div>
 
                                 <!-- password confirmation-->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Подтверждение пароля</label>
-                                    <input type="password" id="simpleinput" class="form-control">
+                                    <input type="password" id="simpleinput" name="confirm_password" class="form-control">
                                 </div>
 
 
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                    <button class="btn btn-warning">Изменить</button>
+                                    <button class="btn btn-warning" type="submit">Изменить</button>
                                 </div>
                             </div>
                         </div>
