@@ -1,3 +1,16 @@
+<?php session_start();
+require __DIR__.'/functions.php'; //подключаем файл с функциями
+
+if (is_not_authorize()){
+    redirect_to('page_login.php');
+}
+
+if (!is_admin(get_athorizated_user()) and is_not_author()){
+    set_flash_message('danger', 'Можно редактировать только свой профиль!');
+    redirect_to('users.php');
+}
+$user = get_user_by_id($_GET['id']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +31,7 @@
         <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="users.php">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -38,7 +51,8 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="media_handler.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="user_id" value="<?php echo $user['id']?>">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -48,17 +62,16 @@
                             </div>
                             <div class="panel-content">
                                 <div class="form-group">
-                                    <img src="img/demo/authors/josh.png" alt="" class="img-responsive" width="200">
+                                    <img src="<?php echo get_avatar($user)?>" alt="" class="img-responsive" width="200">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="example-fileinput">Выберите аватар</label>
-                                    <input type="file" id="example-fileinput" class="form-control-file">
+                                    <input type="file" id="example-fileinput"  name="avatar" class="form-control-file">
                                 </div>
 
-
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                    <button class="btn btn-warning">Загрузить</button>
+                                    <button class="btn btn-warning" type="submit">Загрузить</button>
                                 </div>
                             </div>
                         </div>
