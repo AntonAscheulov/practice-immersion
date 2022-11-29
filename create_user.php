@@ -4,6 +4,11 @@ require __DIR__.'/functions.php'; //подключаем файл с функц�
 if (is_not_authorize()){
     redirect_to('page_login.php');
 }
+$statuses = [
+  'online' => 'Онлайн',
+  'not_disturb' => 'Не беспокоить',
+  'away' => 'Нет на месте',
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -113,9 +118,9 @@ if (is_not_authorize()){
                                 <div class="form-group">
                                     <label class="form-label" for="example-select">Выберите статус</label>
                                     <select class="form-control" id="example-select" name="status">
-                                        <option>Онлайн</option>
-                                        <option>Оффлайн</option>
-                                        <option>Нет на месте</option>
+                                        <?php foreach ($statuses as $status => $value):?>
+                                        <option value="<?php echo $status?>"><?php echo $value?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
 

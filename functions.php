@@ -93,11 +93,11 @@ function is_equal($user, $current_user){
 }
 
 function get_status($user){
-    if ($user['status'] === 'Онлайн'){
+    if ($user['status'] === 'online'){
         return 'success';
-    }elseif ($user['status'] === 'Оффлайн'){
+    }elseif ($user['status'] === 'not_disturb'){
         return 'danger';
-    }elseif ($user['status'] === 'Нет на месте'){
+    }elseif ($user['status'] === 'away'){
         return 'warning';
     }
 }
