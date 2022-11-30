@@ -224,3 +224,19 @@ function edit_credentials($user_id, $email, $password){
         ]);
     }
 }
+
+function delete_user($user_id){
+    $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
+    $sql = "SELECT * FROM users WHERE id=:id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['id' => $user_id]);
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (file_exists($result['avatar'])){
+        unlink($result['avatar']);
+    }
+
+    $sql = "DELETE FROM users WHERE id=:id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute(['id' => $user_id]);
+}

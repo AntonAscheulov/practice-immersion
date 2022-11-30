@@ -105,7 +105,7 @@ $users = get_users();
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>
-                                        <a href="#" class="dropdown-item" onclick="return confirm('are you sure?');">
+                                        <a href="delete_handler.php?id=<?php echo $user['id']?>" class="dropdown-item" onclick="return confirm('Вы уверены?');">
                                             <i class="fa fa-window-close"></i>
                                             Удалить
                                         </a>
