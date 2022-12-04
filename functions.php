@@ -50,7 +50,7 @@ function authorize($email, $password){
 if (empty($user) or !password_verify($password,$user['password'])){
     set_flash_message('danger', 'Неверное имя пользователя или пароль');
     redirect_to('page_login.php');
-}else
+}
     $_SESSION['user'] = ['id' =>$user['id'], 'role' => $user['role']];
     redirect_to('users.php');
 }
@@ -202,24 +202,22 @@ function is_valid_email($email, $current_email){
 
     if ($current_email == $email or empty($user_email)){
         return true;
-    }else return false;
+    }return false;
 }
 
 function edit_credentials($user_id, $email, $password){
     $pdo = new PDO('mysql:host=127.0.0.1:3306; dbname=immersion;', 'root', '');
-    if (empty($password)){
-        $sql = "UPDATE users SET email = :email WHERE id = :id";
+    $sql = "UPDATE users SET email = :email WHERE id = :id";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([
+      'id' => $user_id,
+      'email' => $email,
+    ]);
+    if (!empty($password)){
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
         $statement = $pdo->prepare($sql);
         $statement->execute([
           'id' => $user_id,
-          'email' => $email,
-        ]);
-    }else{
-        $sql = "UPDATE users SET email = :email, password = :password WHERE id = :id";
-        $statement = $pdo->prepare($sql);
-        $statement->execute([
-          'id' => $user_id,
-          'email' => $email,
           'password' => password_hash($password, PASSWORD_DEFAULT),
         ]);
     }
